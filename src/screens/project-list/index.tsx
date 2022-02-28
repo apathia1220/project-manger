@@ -2,11 +2,8 @@ import React, {useState, useEffect} from 'react'
 import {List} from './list'
 import {SearchPanel} from './search-panel'
 import {cleanObject, useMount, useDebounce} from 'utils'
-import qs from 'qs'
 import { useHttp } from 'utils/http'
 
-
-const api = process.env.REACT_APP_API_URL
 
 export const ProjectListScreen:React.FC =  () => {
     // 人员信息

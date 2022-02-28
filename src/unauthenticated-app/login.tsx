@@ -1,31 +1,32 @@
+import { Button, Form, Input } from 'antd'
 import { useAuth } from 'context/auth-context'
-import React, {FormEvent} from 'react'
+import React from 'react'
+import { LongButton } from 'unauthenticated-app'
 
 
 export const LoginScreen = () => {
     const {login, user} = useAuth()
-    const handleSubmit = (event:FormEvent<HTMLFormElement>)=>{
-        event.preventDefault();
+    const handleSubmit = (values:{username:string, password:string})=>{
         // 默认是event.currentTarget.elements[0]当作element类型，这个类型上没有value属性
-        const username = (event.currentTarget.elements[0] as HTMLInputElement).value;
-        const password = (event.currentTarget.elements[1] as HTMLInputElement).value;
+        // const username = (event.currentTarget.elements[0] as HTMLInputElement).value;
+        // const password = (event.currentTarget.elements[1] as HTMLInputElement).value;
         /**
          * 将键盘输入的用户信息通过login上传到服务器并且将服务器返回的Token存储到本地
          */
-        login({username,password})
+        login(values)
     }
 
     return (
-        <form onSubmit={handleSubmit}>
-            <div>
-                <label htmlFor="username">用户名</label>
-                <input type="text" id={"username"}/>
-            </div>
-            <div>
-                <label htmlFor="password">密码</label>
-                <input type="password" id={"password"}/>
-            </div>
-            <button type={'submit'}>登录</button>
-        </form>
+        <Form onFinish={handleSubmit}>
+            <Form.Item name={'username'} rules={[{required:true, message:'请输入用户名'}]}>
+                <Input placeholder={'用户名'} type='text' id={'username'}></Input>
+            </Form.Item>
+            <Form.Item name={'password'} rules={[{required:true, message:'请输入密码'}]}>
+                <Input placeholder={'密码'} type='password' id={'password'}></Input>
+            </Form.Item>
+            <Form.Item>
+                <LongButton type={'primary'} htmlType={'submit'}>登录</LongButton>
+            </Form.Item>
+        </Form>
     )
 }
