@@ -2,38 +2,40 @@ import React, {useState, useEffect} from 'react'
 import {List} from './list'
 import {SearchPanel} from './search-panel'
 import {cleanObject, useMount, useDebounce} from 'utils'
-import { useHttp } from 'utils/http'
+import styled from '@emotion/styled'
+import { Typography } from 'antd'
+import { useProjects } from 'utils/project'
+import { useUsers } from 'utils/user'
 
 
 export const ProjectListScreen:React.FC =  () => {
-    // 人员信息
-    const [users, setUsers] = useState([])
     // 键盘输入的信息
     const [param, setParam] = useState({
         name:'',
         personId:''
     })
-    // 显示的列表信息
-    const [list, setList] = useState([])
-    // 过滤后的键盘输入数据
+    
+    // debounceParam:经过防抖hook处理后的用户的输入参数
     const debounceParam = useDebounce(param, 200)
-    const client = useHttp()
-
-  useEffect(() => {
-    client('projects', {data:cleanObject(debounceParam)}).then(setList)
-    // 通过将键盘输入的值作为参数传递给服务器，服务器返回与参数相匹配的数据，存入List中
-    // List中的项目已经经过param筛选后的
-    //users中人的id跟project中的personId是相关联的
-  }, [debounceParam])
-
-  useMount(() => {
-    client('users', {}).then(setUsers)
-  })
+    const {isLoading, error, data:list} = useProjects(debounceParam)
+    const {data: users} = useUsers()
 
     return (
-        <div>
-            <SearchPanel users={users} param={param} setParam={setParam}/>
-            <List list={list} users={users}/>
-        </div>
+        <Container>
+            <h1>项目列表</h1>
+            <SearchPanel users={users || []} param={param} setParam={setParam}/>
+                      {
+                      error 
+                        ? <Typography.Text type={'danger'}>{error.message}</Typography.Text> 
+                         : null
+                        }
+            <List dataSource={list || []} users={users || []}/>
+        </Container>
     )
 }
+
+
+
+const Container = styled.div`
+padding: 3.2rem;
+`

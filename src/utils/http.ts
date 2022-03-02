@@ -13,6 +13,7 @@ export const http = async (endpoint: string, {data, token ,headers, ...customCon
      * endpoint:请求的页面，比如/login
      * 默认方法是GET
      * 当传入的customConfig中包含请求的method时会覆盖默认的方法
+     * 返回值是一个promise，并且携带的值为请求返回的数据
      */
     const config = {
         methods:'GET',

@@ -2,12 +2,14 @@ import { useState, useEffect} from 'react'
 
 export const isFalsy = (value: unknown) => value === 0 ? false : !value
 
+export const isVoid = (value: unknown) => value === 0 || value === null || value === ''
+
 // 过滤出路径参数中为空的值
-export const cleanObject = (object: any) => {
+export const cleanObject = (object: { [key: string]:unknown}) => {
     const result = {...object}
     Object.keys(result).forEach( key => {
         const value = result[key]
-        if(isFalsy(value)){
+        if(isVoid(value)){
             delete result[key]
         }
     })

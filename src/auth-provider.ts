@@ -30,7 +30,8 @@ export const login = (data:{username:string, password:string}) =>{
         if (response.ok) {
             return handleUserResponse(await response.json())
         }else{
-            return Promise.reject(data)
+            // return await response.json()
+            return Promise.reject(await response.json())
         }
       })
 }
@@ -46,11 +47,10 @@ export const register = (data:{username:string, password:string}) =>{
         if (response.ok) {
             return handleUserResponse(await response.json())
         }else{
-            return Promise.reject(data)
+            return Promise.reject(await response.json())
         }
       })
 }
-
 
 /**
  * 登出操作-----清除本地缓存中对应的用户的Token信息

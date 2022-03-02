@@ -4,6 +4,8 @@ import * as auth from 'auth-provider'
 import { User } from 'screens/project-list/search-panel'
 import { http } from 'utils/http';
 import { useMount } from 'utils';
+import { useAsync } from 'utils/use-async';
+import { FullPageErrorFallback, FullPageLoading } from 'components/lib';
 
 interface AuthForm {
     username: string,
@@ -11,6 +13,9 @@ interface AuthForm {
 }
 
 const bootstrapUser = async () => {
+    /**
+     * 检验本地服务器的Token信息，如果存在Token则在登录的时候将Token作为请求的参数传递给服务器作为服务器验证用户的依据
+     */
     let user = null;
     const token = auth.getToken()
     if(token) {
@@ -30,7 +35,7 @@ const AuthContext = React.createContext<{
 AuthContext.displayName = 'AuthContext'
 
 export const AuthProvider = ({children}: {children:ReactNode}) => {
-    const [user, setUser] = useState<User | null>(null)
+    const {data:user, error, isLoading, isError, isIdle, run, setData:setUser} = useAsync<User | null>()
 
     // 通过登录和注册操作将用户的信息通过setUser存储起来记录登录状态
     const login = (form: AuthForm) => auth.login(form).then(setUser)
@@ -38,8 +43,14 @@ export const AuthProvider = ({children}: {children:ReactNode}) => {
     const logout = () => auth.logout().then(() => setUser(null))
 
     useMount(() => {
-        bootstrapUser().then(setUser)
+        run(bootstrapUser())
     })
+    if(isIdle || isLoading){
+        return <FullPageLoading/>
+    }
+    if(isError){
+        return <FullPageErrorFallback error={error}/>
+    }
 
     return <AuthContext.Provider children={children} value={{user, login, register, logout}}/>
 }
@@ -52,5 +63,8 @@ export const useAuth = () => {
     if(!context){
         throw new Error('useAuth必须再AuthProvider中使用')
     }
+    /**
+     * 返回的信息包括Provider中的value里的值
+     */
     return context
 }

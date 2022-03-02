@@ -8,7 +8,11 @@ import {AuthProvider} from './auth-context'
  * 全局的Appcontext
  */
 export const AppProviders = ({children}:{children:ReactNode}) => {
-    return <AuthProvider>
+    return (
+        // <QueryClientProvider>
+            <AuthProvider>
                 {children}
             </AuthProvider>
+        // </QueryClientProvider>
+    )
 }

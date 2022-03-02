@@ -1,4 +1,4 @@
-import { Button, Card, Divider } from "antd"
+import { Button, Card, Divider, Typography } from "antd"
 import React from "react"
 import { useState } from "react"
 import { LoginScreen } from "./login"
@@ -10,22 +10,33 @@ import right from 'assets/right.svg'
 
 export const UnauthenticatedApp = () => {
     const [isRegister, setIsRegister] = useState(false)
+    const [error, setError] = useState<Error | null>(null)
     return (
         <Container>
             <Header/>
             <Background/>
              <ShadowCard>
                  <Title>{isRegister ? "请注册" : "请登录"}</Title>
+                {error ? <Typography.Text type={"danger"}>{error.message}</Typography.Text>:null}
                 {
-                    isRegister ? <RegisterScreen/> :<LoginScreen/>
+                    /**
+                     * 根据isRegister判断是否进行注册，同时根据是否注册来选择相应的页面
+                     */
+                    isRegister ? <RegisterScreen onError={setError}/> :<LoginScreen onError={setError}/>
                 }
                 <Divider/>
-                <a onClick={()=> setIsRegister(!isRegister)}>切换到{isRegister ? '已经有账号了？直接登录' : '没有账号？注册新账号'}</a>
+                <Button type={"link"} onClick={()=> setIsRegister(!isRegister)}> 
+                    {isRegister ? '已经有账号了？直接登录' : '没有账号？注册新账号'}
+                </Button>
             </ShadowCard>
         </Container>
     )
 };
 
+
+/**
+ * 通过css in js的方式为组件添加css样式
+ */
 const Title = styled.h2`
   margin-bottom: 2.4rem;
   color: rgb(94, 108, 132);
