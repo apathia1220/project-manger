@@ -1,35 +1,42 @@
-import React, {useState, useEffect} from 'react'
-import {List} from './list'
-import {SearchPanel} from './search-panel'
-import {cleanObject, useMount, useDebounce} from 'utils'
+import React, { useState, useEffect } from 'react'
+import { List } from './list'
+import { SearchPanel } from './search-panel'
+import { cleanObject, useMount, useDebounce, useDocumentTitle } from 'utils'
 import styled from '@emotion/styled'
-import { Typography } from 'antd'
+import { Button, Typography } from 'antd'
 import { useProjects } from 'utils/project'
 import { useUsers } from 'utils/user'
+import { Helmet } from 'react-helmet'
+import { useUrlQueryParam } from 'utils/url'
+import { useProjectSearchParams } from './util'
+import { Row } from 'components/lib'
+import { useDispatch } from 'react-redux'
+import { projectListActions } from './project-list.slice'
 
-
-export const ProjectListScreen:React.FC =  () => {
+export const ProjectListScreen = () => {
     // 键盘输入的信息
-    const [param, setParam] = useState({
-        name:'',
-        personId:''
-    })
-    
-    // debounceParam:经过防抖hook处理后的用户的输入参数
-    const debounceParam = useDebounce(param, 200)
-    const {isLoading, error, data:list} = useProjects(debounceParam)
-    const {data: users} = useUsers()
+    const [param, setParam] = useProjectSearchParams()
+    const dispatch = useDispatch()
 
+    // debounceParam:经过防抖hook处理后的用户的输入参数
+    // const debounceParam = useDebounce(param, 200)
+    const { isLoading, error, data: list, retry } = useProjects(useDebounce(param, 200))
+    const { data: users } = useUsers()
+    // useDocumentTitle('项目列表', false)
     return (
         <Container>
-            <h1>项目列表</h1>
-            <SearchPanel users={users || []} param={param} setParam={setParam}/>
-                      {
-                      error 
-                        ? <Typography.Text type={'danger'}>{error.message}</Typography.Text> 
-                         : null
-                        }
-            <List dataSource={list || []} users={users || []}/>
+            <Row between={true}>
+                <h1>项目列表</h1>
+                <Button onClick={() => dispatch(projectListActions.openProjectModal())}>创建项目</Button>
+            </Row>
+
+            <SearchPanel users={users || []} param={param} setParam={setParam} />
+            {
+                error
+                    ? <Typography.Text type={'danger'}>{error.message}</Typography.Text>
+                    : null
+            }
+            <List dataSource={list || []} users={users || []} refresh={retry} />
         </Container>
     )
 }

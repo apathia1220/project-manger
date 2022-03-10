@@ -3,7 +3,9 @@ import React, {Component, PropsWithChildren, ReactElement} from "react";
 type FallbackRender = (props: { error: Error | null }) => ReactElement
 
 // { children: ReactNode, fallbackRender: FallbackRender }
-
+/**
+ * 错误边界捕获 出现页面渲染的错误会渲染一个新的界面提示用户
+ */
 export default class ErrorBoundary extends Component<PropsWithChildren<{ fallbackRender: FallbackRender }>, { error: Error | null }> {
   state = {
     error: null

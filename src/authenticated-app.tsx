@@ -1,34 +1,56 @@
 import styled from "@emotion/styled"
 import { Button, Dropdown, Menu } from "antd"
-import { Row } from "components/lib"
+import { ButtonNoPadding, Row } from "components/lib"
 import { useAuth } from "context/auth-context"
 import React from "react"
+import { useDispatch, useSelector } from "react-redux"
+import { Routes, Route } from 'react-router'
+import { HashRouter as Router } from 'react-router-dom'
+import { Project } from "screens/project"
 import { ProjectListScreen } from "screens/project-list"
-import {ReactComponent as SoftWareLogo} from './assets/software-logo.svg'
+import { projectListActions, selectProjectModalOpen } from "screens/project-list/project-list.slice"
+import { ProjectModal } from "screens/project-list/project-modal"
+import { ProjectPopover } from "screens/project-list/project-popover"
+import { resetRoute } from "utils"
+import { ReactComponent as SoftWareLogo } from './assets/software-logo.svg'
 
 export const AuthenticatedApp = () => {
-    const {logout,user} = useAuth()
     return <Container>
-                <Header between={true}>
-                    <HeaderLeft gap={true}>
-                        <SoftWareLogo width={'18rem'} color={'rgb(38, 132, 255)'}/>
-                        <h2>项目</h2>
-                        <h2>用户</h2>
-                    </HeaderLeft>
-                    <HeaderRight>
-                        <Dropdown overlay={<Menu>
-                            <Menu.Item key={'logout'}>
-                                <Button onClick={logout}>登出</Button>
-                            </Menu.Item>
-                        </Menu>}>
-                           <Button onClick={e => e.preventDefault()}> Hi,{user?.name}</Button>
-                        </Dropdown>
-                    </HeaderRight>
-                </Header>
-                <Main>
-                    <ProjectListScreen/>
-                </Main>
-            </Container>
+        <Router>
+            <HeaderPage />
+            <Main>
+                <Routes>
+                    <Route path="/project" element={<ProjectListScreen />}></Route>
+                    <Route path="/project/:projectId/*" element={<Project />} />
+                    <Route path="*" element={<ProjectListScreen />} />
+                </Routes>
+            </Main>
+        </Router>
+        <ProjectModal/>
+    </Container>
+}
+
+const HeaderPage = () => {
+    const { logout, user } = useAuth()
+    
+    return <Header between={true}>
+        <HeaderLeft gap={true}>
+            <ButtonNoPadding type="link" onClick={resetRoute}>
+                <SoftWareLogo width={'18rem'} color={'rgb(38, 132, 255)'} />
+            </ButtonNoPadding>
+            <ProjectPopover />
+            <span>用户</span>
+        </HeaderLeft>
+        <HeaderRight>
+            <Dropdown overlay={<Menu>
+                <Menu.Item key={'logout'}>
+                    <Button onClick={logout}>登出</Button>
+                </Menu.Item>
+            </Menu>}>
+                <Button onClick={e => e.preventDefault()}> Hi,{user?.name}</Button>
+            </Dropdown>
+        </HeaderRight>
+    </Header>
 }
 
 const Container = styled.div`

@@ -1,5 +1,5 @@
-import styled from  '@emotion/styled'
-import { Spin, Typography } from 'antd';
+import styled from '@emotion/styled'
+import { Button, Spin, Typography } from 'antd';
 import React from 'react';
 
 
@@ -11,9 +11,9 @@ import React from 'react';
  * 传入布尔值，为真时设置默认值为2rem false时不设置
  */
 export const Row = styled.div<{
-    gap?:number | boolean,
-    between?:boolean,
-    marginBottom?: number
+  gap?: number | boolean,
+  between?: boolean,
+  marginBottom?: number
 }>`
     display: flex;
     align-items: center;
@@ -27,15 +27,15 @@ export const Row = styled.div<{
 `
 
 export const ErrorBox = ({ error }: { error: unknown }) => {
-    // 类型守卫
-    const isError = (value: any): value is Error => value?.message;
-  
-    if (isError(error)) {
-      return <Typography.Text type={"danger"}>{error?.message}</Typography.Text>;
-    }
-  
-    return null;
-  };
+  // 类型守卫
+  const isError = (value: any): value is Error => value?.message;
+
+  if (isError(error)) {
+    return <Typography.Text type={"danger"}>{error?.message}</Typography.Text>;
+  }
+
+  return null;
+};
 
 const FullPage = styled.div`
   height: 100vh;
@@ -44,14 +44,27 @@ const FullPage = styled.div`
   align-items: center;
 `;
 
-export const FullPageLoading = () => (
-    <FullPage>
-      <Spin size={"large"} />
-    </FullPage>
-  );
 
+/**
+ * 加载时渲染的页面
+ */
+export const FullPageLoading = () => (
+  <FullPage>
+    <Spin size={"large"} />
+  </FullPage>
+);
+
+
+/**
+ * 出现错误时展现的页面
+ */
 export const FullPageErrorFallback = ({ error }: { error: Error | null }) => (
-    <FullPage>
-      <ErrorBox error={error} />
-    </FullPage>
-  );
+  <FullPage>
+    <ErrorBox error={error} />
+  </FullPage>
+);
+
+
+export const ButtonNoPadding = styled(Button)`
+  padding: 0;
+`;
