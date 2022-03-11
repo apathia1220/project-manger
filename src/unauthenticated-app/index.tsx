@@ -8,6 +8,7 @@ import logo from 'assets/logo.svg'
 import left from 'assets/left.svg'
 import right from 'assets/right.svg'
 import { useDocumentTitle } from "utils"
+import { ErrorBox } from "components/lib"
 
 export const UnauthenticatedApp = () => {
     const [isRegister, setIsRegister] = useState(false)
@@ -19,7 +20,7 @@ export const UnauthenticatedApp = () => {
             <Background/>
              <ShadowCard>
                  <Title>{isRegister ? "请注册" : "请登录"}</Title>
-                {error ? <Typography.Text type={"danger"}>{error.message}</Typography.Text>:null}
+                <ErrorBox error={error}/>
                 {
                     /**
                      * 根据isRegister判断是否进行注册，同时根据是否注册来选择相应的页面

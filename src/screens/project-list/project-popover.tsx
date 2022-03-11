@@ -5,10 +5,12 @@ import React from 'react'
 import { useDispatch } from 'react-redux'
 import { useProjects } from 'utils/project'
 import { projectListActions } from './project-list.slice'
+import { useProjectModal } from './util'
 
 export const ProjectPopover = () => {
-    const dispatch = useDispatch()
+    // const dispatch = useDispatch()
     const { data: projects, isLoading } = useProjects()
+    const { open } = useProjectModal()
 
     const pinnerProjects = projects?.filter(project => project.pin)
 
@@ -24,7 +26,7 @@ export const ProjectPopover = () => {
             }
         </List>
         <Divider />
-        <ButtonNoPadding onClick={() => dispatch(projectListActions.openProjectModal())} type='link'>创建项目</ButtonNoPadding>
+        <ButtonNoPadding onClick={open} type='link'>创建项目</ButtonNoPadding>
     </ContentContainer>
 
     return <Popover placement={'bottom'} content={content}>

@@ -8,35 +8,32 @@ import { useProjects } from 'utils/project'
 import { useUsers } from 'utils/user'
 import { Helmet } from 'react-helmet'
 import { useUrlQueryParam } from 'utils/url'
-import { useProjectSearchParams } from './util'
-import { Row } from 'components/lib'
+import { useProjectModal, useProjectSearchParams } from './util'
+import { ErrorBox, Row } from 'components/lib'
 import { useDispatch } from 'react-redux'
 import { projectListActions } from './project-list.slice'
 
 export const ProjectListScreen = () => {
     // 键盘输入的信息
     const [param, setParam] = useProjectSearchParams()
-    const dispatch = useDispatch()
+    // const dispatch = useDispatch()
 
     // debounceParam:经过防抖hook处理后的用户的输入参数
     // const debounceParam = useDebounce(param, 200)
-    const { isLoading, error, data: list, retry } = useProjects(useDebounce(param, 200))
+    const { isLoading, error, data: list } = useProjects(useDebounce(param, 200))
+    const { open } = useProjectModal()
     const { data: users } = useUsers()
     // useDocumentTitle('项目列表', false)
     return (
         <Container>
             <Row between={true}>
                 <h1>项目列表</h1>
-                <Button onClick={() => dispatch(projectListActions.openProjectModal())}>创建项目</Button>
+                <Button onClick={ open }>创建项目</Button>
             </Row>
 
             <SearchPanel users={users || []} param={param} setParam={setParam} />
-            {
-                error
-                    ? <Typography.Text type={'danger'}>{error.message}</Typography.Text>
-                    : null
-            }
-            <List dataSource={list || []} users={users || []} refresh={retry} />
+            <ErrorBox error={error}/>
+            <List dataSource={list || []} users={users || []}  />
         </Container>
     )
 }

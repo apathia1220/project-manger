@@ -3,6 +3,7 @@ import { Button, Dropdown, Menu } from "antd"
 import { ButtonNoPadding, Row } from "components/lib"
 import { useAuth } from "context/auth-context"
 import React from "react"
+import { QueryClient, QueryClientProvider } from "react-query"
 import { useDispatch, useSelector } from "react-redux"
 import { Routes, Route } from 'react-router'
 import { HashRouter as Router } from 'react-router-dom'
@@ -15,19 +16,20 @@ import { resetRoute } from "utils"
 import { ReactComponent as SoftWareLogo } from './assets/software-logo.svg'
 
 export const AuthenticatedApp = () => {
-    return <Container>
-        <Router>
-            <HeaderPage />
-            <Main>
-                <Routes>
-                    <Route path="/project" element={<ProjectListScreen />}></Route>
-                    <Route path="/project/:projectId/*" element={<Project />} />
-                    <Route path="*" element={<ProjectListScreen />} />
-                </Routes>
-            </Main>
-        </Router>
-        <ProjectModal/>
-    </Container>
+    return  <Router> 
+                <Container>
+                    <HeaderPage />
+                    <Main>
+                        <Routes>
+                            <Route path="/project" element={<ProjectListScreen />}></Route>
+                            <Route path="/project/:projectId/*" element={<Project />} />
+                            <Route path="*" element={<ProjectListScreen />} />
+                        </Routes>
+                    </Main>
+                    <ProjectModal />
+                </Container>
+            </Router>
+                
 }
 
 const HeaderPage = () => {
