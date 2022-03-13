@@ -9,7 +9,7 @@ import { useUsers } from 'utils/user'
 import { Helmet } from 'react-helmet'
 import { useUrlQueryParam } from 'utils/url'
 import { useProjectModal, useProjectSearchParams } from './util'
-import { ErrorBox, Row } from 'components/lib'
+import { ErrorBox, Row, ScreenContainer } from 'components/lib'
 import { useDispatch } from 'react-redux'
 import { projectListActions } from './project-list.slice'
 
@@ -25,21 +25,15 @@ export const ProjectListScreen = () => {
     const { data: users } = useUsers()
     // useDocumentTitle('项目列表', false)
     return (
-        <Container>
+        <ScreenContainer>
             <Row between={true}>
                 <h1>项目列表</h1>
-                <Button onClick={ open }>创建项目</Button>
+                <Button onClick={open}>创建项目</Button>
             </Row>
 
             <SearchPanel users={users || []} param={param} setParam={setParam} />
-            <ErrorBox error={error}/>
-            <List dataSource={list || []} users={users || []}  />
-        </Container>
+            <ErrorBox error={error} />
+            <List dataSource={list || []} users={users || []} />
+        </ScreenContainer>
     )
 }
-
-
-
-const Container = styled.div`
-padding: 3.2rem;
-`

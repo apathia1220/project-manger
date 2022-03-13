@@ -1,6 +1,7 @@
 import styled from "@emotion/styled"
 import { Button, Dropdown, Menu } from "antd"
 import { ButtonNoPadding, Row } from "components/lib"
+import { UserPopover } from "components/user-popover"
 import { useAuth } from "context/auth-context"
 import React from "react"
 import { QueryClient, QueryClientProvider } from "react-query"
@@ -16,32 +17,32 @@ import { resetRoute } from "utils"
 import { ReactComponent as SoftWareLogo } from './assets/software-logo.svg'
 
 export const AuthenticatedApp = () => {
-    return  <Router> 
-                <Container>
-                    <HeaderPage />
-                    <Main>
-                        <Routes>
-                            <Route path="/project" element={<ProjectListScreen />}></Route>
-                            <Route path="/project/:projectId/*" element={<Project />} />
-                            <Route path="*" element={<ProjectListScreen />} />
-                        </Routes>
-                    </Main>
-                    <ProjectModal />
-                </Container>
-            </Router>
-                
+    return <Router>
+        <Container>
+            <HeaderPage />
+            <Main>
+                <Routes>
+                    <Route path="/project" element={<ProjectListScreen />}></Route>
+                    <Route path="/project/:projectId/*" element={<Project />} />
+                    <Route path="*" element={<ProjectListScreen />} />
+                </Routes>
+            </Main>
+            <ProjectModal />
+        </Container>
+    </Router>
+
 }
 
 const HeaderPage = () => {
     const { logout, user } = useAuth()
-    
+
     return <Header between={true}>
         <HeaderLeft gap={true}>
             <ButtonNoPadding type="link" onClick={resetRoute}>
                 <SoftWareLogo width={'18rem'} color={'rgb(38, 132, 255)'} />
             </ButtonNoPadding>
             <ProjectPopover />
-            <span>用户</span>
+            <UserPopover/>
         </HeaderLeft>
         <HeaderRight>
             <Dropdown overlay={<Menu>
@@ -71,4 +72,7 @@ const HeaderRight = styled(Row)``
 
 const HeaderLeft = styled(Row)``
 
-const Main = styled.main``
+const Main = styled.main`
+  display: flex;
+  overflow: hidden;
+`

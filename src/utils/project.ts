@@ -5,7 +5,6 @@ import { useHttp } from "./http"
 import { useAsync } from "./use-async"
 import {QueryKey, useMutation, useQuery, useQueryClient } from 'react-query'
 import { useProjectSearchParams } from "screens/project-list/util"
-import { isQueryKey } from "react-query/types/core/utils"
 import { useAddConfig, useDeleteConfig, useEditConfig } from "./use-optimistic-options"
 
 // export const useProjects = (param?: Partial<Project>) => {
@@ -39,7 +38,7 @@ import { useAddConfig, useDeleteConfig, useEditConfig } from "./use-optimistic-o
 
 export const useProjects = (param?: Partial<Project>) => {
   const client = useHttp()
-
+  
   return useQuery<Project[]>(['projects', param], () => client('projects', { data: param}))
 }
 
@@ -55,8 +54,6 @@ export const useEditProject = (queryKey: QueryKey) => {
     useEditConfig(queryKey)
   )
 };
-
-
 
 export const useAddProject = (queryKey: QueryKey) => {
   const client = useHttp();

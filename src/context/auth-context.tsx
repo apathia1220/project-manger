@@ -6,6 +6,7 @@ import { http } from 'utils/http';
 import { useMount } from 'utils';
 import { useAsync } from 'utils/use-async';
 import { FullPageErrorFallback, FullPageLoading } from 'components/lib';
+import { useQueryClient } from 'react-query';
 
 interface AuthForm {
     username: string,
@@ -35,12 +36,15 @@ const AuthContext = React.createContext<{
 AuthContext.displayName = 'AuthContext'
 
 export const AuthProvider = ({children}: {children:ReactNode}) => {
-    const {data:user, error, isLoading, isError, isIdle, run, setData:setUser} = useAsync<User | null>()
-
+    const { data: user, error, isLoading, isError, isIdle, run, setData: setUser } = useAsync<User | null>()
+    const queryClient = useQueryClient()
     // 通过登录和注册操作将用户的信息通过setUser存储起来记录登录状态
     const login = (form: AuthForm) => auth.login(form).then(setUser)
     const register = (form: AuthForm) => auth.register(form).then(setUser)
-    const logout = () => auth.logout().then(() => setUser(null))
+    const logout = () => auth.logout().then(() => {
+        setUser(null)
+        queryClient.clear()
+    })
 
     useMount(() => {
         run(bootstrapUser())

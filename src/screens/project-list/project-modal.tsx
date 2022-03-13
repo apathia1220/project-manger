@@ -27,7 +27,8 @@ export const ProjectModal = () => {
         mutateAsync({ ...editingProject, ...values }).then(closeModal);
     };
 
-    const closeModal = () => {
+  const closeModal = () => {
+      // 关闭弹框时同时删除表单中的数据
         form.resetFields();
         close();
     };
@@ -36,7 +37,8 @@ export const ProjectModal = () => {
       form.setFieldsValue(editingProject);
       // editingProject： 表示的是存储在query中的数据
     }, [editingProject, form]);
-    return <Drawer forceRender={true} onClose={close} visible={modalOpen} width={'100 %'}>
+  
+    return <Drawer forceRender={true} onClose={closeModal} visible={modalOpen} width={'100%'}>
         <Container>
         {isLoading ? (
           <Spin size={"large"} />
