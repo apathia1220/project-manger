@@ -16,7 +16,7 @@ import { ProjectPopover } from "screens/project-list/project-popover"
 import { resetRoute } from "utils"
 import { ReactComponent as SoftWareLogo } from './assets/software-logo.svg'
 
-export const AuthenticatedApp = () => {
+export default () => {
     return <Router>
         <Container>
             <HeaderPage />
@@ -42,7 +42,7 @@ const HeaderPage = () => {
                 <SoftWareLogo width={'18rem'} color={'rgb(38, 132, 255)'} />
             </ButtonNoPadding>
             <ProjectPopover />
-            <UserPopover/>
+            <UserPopover />
         </HeaderLeft>
         <HeaderRight>
             <Dropdown overlay={<Menu>

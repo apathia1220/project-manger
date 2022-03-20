@@ -8,12 +8,12 @@ import 'antd/dist/antd.less'
 import { AppProviders } from 'context';
 
 
-loadServer(()=>{
+loadServer(() => {
   ReactDOM.render(
     <React.StrictMode>
       <AppProviders>
         <DevTools />
-         <App />
+        <App />
       </AppProviders>
     </React.StrictMode>,
     document.getElementById('root')
